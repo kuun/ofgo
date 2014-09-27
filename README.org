@@ -1,1 +1,1 @@
-An openflow protocol statck lib implemented in golang
+An openflow protocol stack lib implemented in golang
