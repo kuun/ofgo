@@ -1,4 +1,4 @@
-package ofp
+package ofp10
 
 // openflow 1.0 message type
 const (

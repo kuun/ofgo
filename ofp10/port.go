@@ -66,6 +66,9 @@ const (
 	OFPPF_PAUSE_ASYM             // Asymmetric pause.
 )
 
+// port binary size, in byte
+const portSize = 48
+
 // Port is an openflow physical port.
 type Port struct {
 	PortNo uint16
@@ -135,5 +138,5 @@ func (p *Port) Marshal(buf []byte) (n int, err error) {
 }
 
 func (p *Port) Len() int {
-	return 48
+	return portSize
 }

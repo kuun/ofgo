@@ -102,12 +102,11 @@ func (msg *Error) Marshal(buf []byte) (n int, err error) {
 }
 
 func (msg *Error) Unmarshal(buf []byte) (n int, err error) {
+	if n, err = msg.Header.Unmarshal(buf); err != nil {
+		return
+	}
 	if len(buf) < msg.Len() {
 		return 0, errors.New("buffer is too short")
-	}
-	n, err = msg.Header.Unmarshal(buf)
-	if err != nil {
-		return
 	}
 	msg.Type = binary.BigEndian.Uint16(buf[n:])
 	n += 2

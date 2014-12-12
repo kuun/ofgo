@@ -25,11 +25,11 @@ func (msg *EchoRequest) Marshal(buf []byte) (n int, err error) {
 }
 
 func (msg *EchoRequest) Unmarshal(buf []byte) (n int, err error) {
-	if len(buf) < msg.Len() {
-		return 0, errors.New("buffer is too short")
-	}
 	if n, err = msg.Header.Unmarshal(buf); err != nil {
 		return n, err
+	}
+	if len(buf) < msg.Len() {
+		return 0, errors.New("buffer is too short")
 	}
 	dataLen := msg.Len() - n
 	if dataLen > 0 {
