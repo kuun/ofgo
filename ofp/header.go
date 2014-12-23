@@ -16,7 +16,7 @@ type Header struct {
 	Xid uint32
 }
 
-const headerLength = 8
+const HeaderLength = 8
 
 func (h *Header) Marshal(b []byte) (n int, err error) {
 	if len(b) < h.Len() {
@@ -47,5 +47,5 @@ func (h *Header) Unmarshal(b []byte) (n int, err error) {
 }
 
 func (h *Header) Len() int {
-	return headerLength
+	return HeaderLength
 }

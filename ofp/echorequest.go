@@ -7,15 +7,14 @@ import (
 // EchoRequest is openflow echo request message.
 type EchoRequest struct {
 	Header
-	data []byte		// An arbitrary-length user data, zero size is valid.
+	data []byte // An arbitrary-length user data, zero size is valid.
 }
 
 func (msg *EchoRequest) Marshal(buf []byte) (n int, err error) {
 	if len(buf) < msg.Len() {
 		return 0, errors.New("buffer is too short")
 	}
-	n, err = msg.Header.Marshal(buf)
-	if err != nil {
+	if n, err = msg.Header.Marshal(buf); err != nil {
 		return n, err
 	}
 	if msg.data != nil {
@@ -44,9 +43,10 @@ func (msg *EchoRequest) Len() int {
 }
 
 // SetData sets the message's payload data. the message will own the 'data'.
-func (msg *EchoRequest) SetData(data []byte, len int) *EchoRequest {
+func (msg *EchoRequest) SetData(data []byte) *EchoRequest {
 	msg.data = data
-	
+	msg.Header.Length = uint16(msg.Len() + len(data))
+
 	return msg
 }
 
