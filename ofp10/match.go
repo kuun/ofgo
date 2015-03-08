@@ -1,4 +1,9 @@
 package ofp10
+import (
+    "encoding/binary"
+
+    "github.com/kuun/ofgo/ofp"
+)
 
 const OFP_ETH_ALAN = 6
 
@@ -50,4 +55,77 @@ type Match struct {
 	NwDst     uint32             // IP destination address.
 	TpSrc     uint16             // TCP/UDP source port.
 	TpDst     uint16             // TCP/UDP destination port.
+}
+
+func (self *Match)Len() int {
+    return 40
+}
+
+func (self *Match)Marshal(buff []byte) (n int, err error) {
+    if (len(buff) < self.Len()) {
+        return 0, ofp.NewNoBuffError()
+    }
+    n = 0
+    binary.BigEndian.PutUint32(buff, self.Wildcards)
+    n += 4
+    binary.BigEndian.PutUint16(buff[n:], self.InPort)
+    n += 2
+    copy(buff[n:], self.EthSrc[:])
+    n += OFP_ETH_ALAN
+    copy(buff[n:], self.EthDst[:])
+    n += OFP_ETH_ALAN
+    binary.BigEndian.PutUint16(buff[n:], self.VlanId)
+    n += 2
+    buff[n] = self.VlanPcp
+    n += 2  // plus one padding byte
+    binary.BigEndian.PutUint16(buff[n:], self.EthType)
+    n += 2
+    buff[n] = self.NwTos
+    n++
+    buff[n] = self.NwProto
+    n += 3 // plus 2 padding byte
+    binary.BigEndian.PutUint32(buff[n:], self.NwSrc)
+    n += 4
+    binary.BigEndian.PutUint32(buff[n:], self.NwDst)
+    n += 4
+    binary.BigEndian.PutUint16(buff[n:], self.TpSrc)
+    n += 2
+    binary.BigEndian.PutUint16(buff[n:], self.TpDst)
+    n += 2
+
+    return n, nil
+}
+
+func (self *Match)Unmarshal(buff []byte) (n int, err error) {
+    if (len(buff) < self.Len()) {
+        return 0, ofp.NewNoBuffError()
+    }
+    n = 0
+    self.Wildcards = binary.BigEndian.Uint32(buff)
+    n += 4
+    self.InPort = binary.BigEndian.Uint16(buff[n:])
+    n += 2
+    copy(self.EthSrc[:], buff[n:])
+    n += OFP_ETH_ALAN
+    copy(self.EthDst[:], buff[n:])
+    n += OFP_ETH_ALAN
+    self.VlanId = binary.BigEndian.Uint16(buff[n:])
+    n += 2
+    self.VlanPcp = buff[n]
+    n += 2
+    self.EthType = binary.BigEndian.Uint16(buff[n:])
+    n += 2
+    self.NwTos = buff[n]
+    n++
+    self.NwProto = buff[n]
+    n += 3
+    self.NwSrc = binary.BigEndian.Uint32(buff[n:])
+    n += 4
+    self.NwDst = binary.BigEndian.Uint32(buff[n:])
+    n += 4
+    self.TpSrc = binary.BigEndian.Uint16(buff[n:])
+    n += 2
+    self.TpDst = binary.BigEndian.Uint16(buff[n:])
+
+    return n, nil
 }
