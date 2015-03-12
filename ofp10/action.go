@@ -221,7 +221,7 @@ type ActionVlanPcp struct {
 
 func NewActionVlanPcp() *ActionVlanPcp {
 	return &ActionVlanPcp{
-		ActionHeader: ActionHeader{Type: OFPAT_SET_VLAN_PCP, Lenght: 8},
+		ActionHeader: ActionHeader{Type: OFPAT_SET_VLAN_PCP, Length: 8},
 	}
 }
 
@@ -283,7 +283,7 @@ func (self *ActionDlAddr) Type() ActionType {
 }
 
 func (self *ActionDlAddr) Len() int {
-	return self.ActionHeader.Length
+	return int(self.ActionHeader.Length)
 }
 
 func (self *ActionDlAddr) Marshal(buff []byte) (n int, err error) {
@@ -335,7 +335,7 @@ func (self *ActionNwAddr) Type() ActionType {
 }
 
 func (self *ActionNwAddr) Len() int {
-	return self.ActionHeader.Length
+	return int(self.ActionHeader.Length)
 }
 
 func (self *ActionNwAddr) Marshal(buff []byte) (n int, err error) {
@@ -380,7 +380,7 @@ func (self *ActionNwTos) Type() ActionType {
 }
 
 func (self *ActionNwTos) Len() int {
-	return self.ActionHeader.Length
+	return int(self.ActionHeader.Length)
 }
 
 func (self *ActionNwTos) Marshal(buff []byte) (n int, err error) {
@@ -432,7 +432,7 @@ func (self *ActionTpPort) Type() ActionType {
 }
 
 func (self *ActionTpPort) Len() int {
-	return self.ActionHeader.Length
+	return int(self.ActionHeader.Length)
 }
 
 func (self *ActionTpPort) Marshal(buff []byte) (n int, err error) {
@@ -465,7 +465,7 @@ type ActionVendorHeader struct {
 }
 
 func (self *ActionVendorHeader) Len() int {
-	return self.ActionHeader.Length
+	return int(self.ActionHeader.Length)
 }
 
 func (self *ActionVendorHeader) Marshal(buff []byte) (n int, err error) {
